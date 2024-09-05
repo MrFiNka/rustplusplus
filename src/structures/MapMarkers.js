@@ -37,7 +37,8 @@ class MapMarkers {
             CargoShip: 5,
             Crate: 6,
             GenericRadius: 7,
-            PatrolHelicopter: 8
+            PatrolHelicopter: 8,
+            TravelingVendor: 9
         }
 
         this._players = [];
@@ -46,6 +47,7 @@ class MapMarkers {
         this._cargoShips = [];
         this._genericRadiuses = [];
         this._patrolHelicopters = [];
+        this._travelingVendors = [];
 
         /* Timers */
         this.cargoShipEgressTimers = new Object();
@@ -61,6 +63,7 @@ class MapMarkers {
         this.timeSinceLargeOilRigWasTriggered = null;
         this.timeSincePatrolHelicopterWasOnMap = null;
         this.timeSincePatrolHelicopterWasDestroyed = null;
+        this.timeSinceTravelingVendorWasOnMap = null;
 
         /* Event location */
         this.patrolHelicopterDestroyedLocation = null;
@@ -94,6 +97,8 @@ class MapMarkers {
     set genericRadiuses(genericRadiuses) { this._genericRadiuses = genericRadiuses; }
     get patrolHelicopters() { return this._patrolHelicopters; }
     set patrolHelicopters(patrolHelicopters) { this._patrolHelicopters = patrolHelicopters; }
+    get travelingVendors() { return this._travelingVendors; }
+    set travelingVendors(travelingVendors) { this._travelingVendors = travelingVendors; }
 
     getType(type) {
         if (!Object.values(this.types).includes(type)) {
@@ -123,6 +128,10 @@ class MapMarkers {
 
             case this.types.PatrolHelicopter: {
                 return this.patrolHelicopters;
+            } break;
+
+            case this.types.TravelingVendor: {
+                return this.travelingVendors;
             } break;
 
             default: {
@@ -256,6 +265,7 @@ class MapMarkers {
         this.updateCH47s(mapMarkers);
         this.updateVendingMachines(mapMarkers);
         this.updateGenericRadiuses(mapMarkers);
+        this.updateTravelingVendors(mapMarkers);
     }
 
     updatePlayers(mapMarkers) {
@@ -487,6 +497,7 @@ class MapMarkers {
 
             marker.location = pos;
             marker.onItsWayOut = false;
+            marker.isDocked = false;
 
             /* Offset that is used to determine if CargoShip just spawned */
             let offset = 4 * Map.gridDiameter;
@@ -550,6 +561,46 @@ class MapMarkers {
             }
 
             this.rustplus.cargoShipTracers[marker.id].push({ x: marker.x, y: marker.y });
+
+            const harbors = [];
+            for (const monument of this.rustplus.map.monuments) {
+                if (/harbor/.test(monument.token)) {
+                    harbors.push({ x: monument.x, y: monument.y })
+                }
+            }
+
+            /* If CargoShip is docked at Harbor */
+            if (!this.rustplus.isFirstPoll && !cargoShip.isDocked) {
+                for (const harbor of harbors) {
+                    if (Map.getDistance(marker.x, marker.y, harbor.x, harbor.y) <= Constants.HARBOR_DOCK_DISTANCE) {
+                        if (marker.x === cargoShip.x && marker.y === cargoShip.y) {
+                            /* CargoShip is now docked. */
+                            const harborLocation = Map.getPos(harbor.x, harbor.y, mapSize, this.rustplus);
+                            cargoShip.isDocked = true;
+                            this.rustplus.sendEvent(
+                                this.rustplus.notificationSettings.cargoShipDockingAtHarborSetting,
+                                this.client.intlGet(this.rustplus.guildId, 'cargoShipDockingAtHarbor',
+                                    { location: harborLocation.location }), 'cargo', Constants.COLOR_CARGO_SHIP_DOCKED
+                            );
+                        }
+                    }
+                }
+            }
+            else if (!this.rustplus.isFirstPoll && cargoShip.isDocked) {
+                for (const harbor of harbors) {
+                    if (Map.getDistance(marker.x, marker.y, harbor.x, harbor.y) <= Constants.HARBOR_DOCK_DISTANCE) {
+                        if (marker.x !== cargoShip.x || marker.y !== cargoShip.y) {
+                            const harborLocation = Map.getPos(harbor.x, harbor.y, mapSize, this.rustplus);
+                            cargoShip.isDocked = false;
+                            this.rustplus.sendEvent(
+                                this.rustplus.notificationSettings.cargoShipDockingAtHarborSetting,
+                                this.client.intlGet(this.rustplus.guildId, 'cargoShipLeftHarbor',
+                                    { location: harborLocation.location }), 'cargo', Constants.COLOR_CARGO_SHIP_DOCKED
+                            );
+                        }
+                    }
+                }
+            }
 
             cargoShip.x = marker.x;
             cargoShip.y = marker.y;
@@ -706,6 +757,52 @@ class MapMarkers {
         }
     }
 
+    updateTravelingVendors(mapMarkers) {
+        let newMarkers = this.getNewMarkersOfTypeId(this.types.TravelingVendor, mapMarkers.markers);
+        let leftMarkers = this.getLeftMarkersOfTypeId(this.types.TravelingVendor, mapMarkers.markers);
+        let remainingMarkers = this.getRemainingMarkersOfTypeId(this.types.TravelingVendor, mapMarkers.markers);
+
+        /* TravelingVendor markers that are new. */
+        for (let marker of newMarkers) {
+            let mapSize = this.rustplus.info.correctedMapSize;
+            let pos = Map.getPos(marker.x, marker.y, mapSize, this.rustplus);
+
+            marker.location = pos;
+
+            this.rustplus.sendEvent(
+                this.rustplus.notificationSettings.travelingVendorDetectedSetting,
+                this.client.intlGet(this.rustplus.guildId, 'travelingVendorLocatedAt', { location: pos.string }),
+                'vendor',
+                Constants.COLOR_TRAVELING_VENDOR_LOCATED_AT);
+
+            this.travelingVendors.push(marker);
+        }
+        
+        /* TravelingVendor markers that have left. */
+        for (let marker of leftMarkers) {
+            this.rustplus.sendEvent(
+                this.rustplus.notificationSettings.travelingVendorLeftSetting,
+                this.client.intlGet(this.rustplus.guildId, 'travelingVendorLeftMap', { location: marker.location.string }),
+                'vendor',
+                Constants.COLOR_TRAVELING_VENDOR_LEFT_MAP);
+
+            this.timeSinceTravelingVendorWasOnMap = new Date();
+
+            this.travelingVendors = this.travelingVendors.filter(e => e.id !== marker.id);
+        }
+
+        /* TravelingVendor markers that still remains. */
+        for (let marker of remainingMarkers) {
+            let mapSize = this.rustplus.info.correctedMapSize;
+            let pos = Map.getPos(marker.x, marker.y, mapSize, this.rustplus);
+            let travelingVendor = this.getMarkerByTypeId(this.types.TravelingVendor, marker.id);
+
+            travelingVendor.x = marker.x;
+            travelingVendor.y = marker.y;
+            travelingVendor.location = pos;
+        }
+    }
+
 
 
     /* Timer notification functions */
@@ -789,6 +886,7 @@ class MapMarkers {
         this.cargoShips = [];
         this.genericRadiuses = [];
         this.patrolHelicopters = [];
+        this.travelingVendors = [];
 
         for (const [id, timer] of Object.entries(this.cargoShipEgressTimers)) {
             timer.stop();
@@ -809,6 +907,7 @@ class MapMarkers {
         this.timeSinceLargeOilRigWasTriggered = null;
         this.timeSincePatrolHelicopterWasOnMap = null;
         this.timeSincePatrolHelicopterWasDestroyed = null;
+        this.timeSinceTravelingVendorWasOnMap = null;
 
         this.patrolHelicopterDestroyedLocation = null;
 

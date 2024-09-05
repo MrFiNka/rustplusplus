@@ -2194,7 +2194,7 @@ class RustPlus extends RustPlusLib {
         ]);
 
         let str = `${itemName}: `;
-        for (const item of recycleData) {
+        for (const item of recycleData['recycler']) {
             str += `${Client.client.items.getName(item.itemId)} x${item.quantity}, `;
         }
         str = str.slice(0, -2);
@@ -2705,6 +2705,7 @@ class RustPlus extends RustPlusLib {
         }
     }
 
+<<<<<<< HEAD
     async getCommandSay(command, callerName) {
         const prefix = this.generalSettings.prefix;
         const commandSay = `${prefix}${Client.client.intlGet(this.guildId, 'commandSyntaxSay')}`;
@@ -2720,6 +2721,48 @@ class RustPlus extends RustPlusLib {
         const str = `${callerName} ${Client.client.intlGet(this.guildId, 'says')} ${text}`
         await DiscordVoice.sendDiscordVoiceMessage(this.guildId, str)
         return Client.client.intlGet(this.guildId, 'sentVoiceSay');
+=======
+    getCommandTravelingVendor(isInfoChannel = false) {
+        const strings = [];
+        for (const travelingVendor of this.mapMarkers.travelingVendors) {
+            if (isInfoChannel) {
+                return Client.client.intlGet(this.guildId, 'atLocation', {
+                    location: travelingVendor.location.string
+                });
+            }
+            else {
+                strings.push(Client.client.intlGet(this.guildId, 'travelingVendorLocatedAt', {
+                    location: travelingVendor.location.string
+                }));
+            }
+        }
+
+        if (strings.length === 0) {
+            const wasOnMap = this.mapMarkers.timeSinceTravelingVendorWasOnMap;
+
+            if (wasOnMap == null) {
+                return isInfoChannel ? Client.client.intlGet(this.guildId, 'notActive') :
+                    Client.client.intlGet(this.guildId, 'travelingVendorNotCurrentlyOnMap');
+            }
+            else if (wasOnMap !== null) {
+                const secondsSince = (new Date() - wasOnMap) / 1000;
+                if (isInfoChannel) {
+                    const timeSince = Timer.secondsToFullScale(secondsSince, 's');
+                    return Client.client.intlGet(this.guildId, 'timeSinceLast', {
+                        time: timeSince
+                    });
+                }
+                else {
+                    const timeSince = Timer.secondsToFullScale(secondsSince);
+                    return Client.client.intlGet(this.guildId, 'timeSinceTravelingVendorWasOnMap', {
+                        time: timeSince
+                    });
+                }
+            }
+        }
+
+        return strings;
+>>>>>>> 10f299bfa953e592bf44a08e86ccb24d93c05295
     }
 }
 

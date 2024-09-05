@@ -204,6 +204,10 @@ module.exports = {
         commandLowerCase.startsWith(`${prefix}${client.intlGet(guildId, 'commandSyntaxSay')} `)) {
         response = await rustplus.getCommandSay(command, callerName);
         }
+        else if (commandLowerCase === `${prefix}${client.intlGet('en', 'commandSyntaxTravelingVendor')}` ||
+            commandLowerCase === `${prefix}${client.intlGet(guildId, 'commandSyntaxTravelingVendor')}`) {
+            response = rustplus.getCommandTravelingVendor();
+        }
         else {
             /* Smart Switches/ Group Switches are not currently supported through discord. */
             return false;

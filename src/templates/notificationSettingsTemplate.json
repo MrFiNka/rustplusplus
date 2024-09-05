@@ -71,6 +71,18 @@
         "inGame": false,
         "voice": true
     },
+    "travelingVendorDetectedSetting": {
+        "image": "chinook_47_logo.png",
+        "discord": true,
+        "inGame": false,
+        "voice": true
+    },
+    "travelingVendorLeftSetting": {
+        "image": "chinook_47_logo.png",
+        "discord": true,
+        "inGame": false,
+        "voice": true
+    },
     "vendingMachineDetectedSetting": {
         "image": "vending_machine_logo.png",
         "discord": true,
