@@ -450,12 +450,19 @@ class RustPlus extends RustPlusLib {
             if (!(await this.waitForAvailableTokens(1))) {
                 return { error: Client.client.intlGet(null, 'tokensDidNotReplenish') };
             }
-
-            return await this.sendRequestAsync({
+    
+            const response = await this.sendRequestAsync({
                 getInfo: {}
             }, timeout).catch((e) => {
                 return e;
             });
+    
+            // Патч для отсутствующего queuedPlayers
+            if (response?.info && typeof response.info.queuedPlayers === 'undefined') {
+                response.info.queuedPlayers = 0;
+            }
+    
+            return response;
         }
         catch (e) {
             return e;
@@ -653,6 +660,12 @@ class RustPlus extends RustPlusLib {
             this.log(Client.client.intlGet(null, 'errorCap'),
                 Client.client.intlGet(null, 'responseIsEmpty'), 'error');
             clearInterval(this.pollingTaskId);
+            return false;
+        }
+        else if (response.toString().includes('ProtocolError')) {
+            // Обработка ошибок протобуфера
+            this.log(Client.client.intlGet(null, 'errorCap'),
+                `Protobuf Error: ${response.message}`, 'error');
             return false;
         }
         return true;
@@ -2051,18 +2064,20 @@ class RustPlus extends RustPlusLib {
     }
 
     getCommandPop(isInfoChannel = false) {
+        // Добавить проверку на существование queuedPlayers
+        const queued = this.info.queuedPlayers || 0;
+        
         if (isInfoChannel) {
-            return `${this.info.players}${this.info.isQueue() ? `(${this.info.queuedPlayers})` : ''}` +
-                `/${this.info.maxPlayers}`;
+            return `${this.info.players}${queued > 0 ? `(${queued})` : ''}/${this.info.maxPlayers}`;
         }
         else {
             const string = Client.client.intlGet(this.guildId, 'populationPlayers', {
                 current: this.info.players,
                 max: this.info.maxPlayers
             });
-            const queuedPlayers = this.info.isQueue() ?
-                ` ${Client.client.intlGet(this.guildId, 'populationQueue', { number: this.info.queuedPlayers })}` : '';
-
+            const queuedPlayers = queued > 0 ?
+                ` ${Client.client.intlGet(this.guildId, 'populationQueue', { number: queued })}` : '';
+    
             return `${string}${queuedPlayers}`;
         }
     }

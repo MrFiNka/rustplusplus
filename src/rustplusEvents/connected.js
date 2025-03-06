@@ -26,6 +26,7 @@ const PollingHandler = require('../handlers/pollingHandler.js');
 module.exports = {
     name: 'connected',
     async execute(rustplus, client) {
+        try {
         if (!rustplus.isServerAvailable()) return rustplus.deleteThisRustplusInstance();
 
         rustplus.log(client.intlGet(null, 'connectedCap'), client.intlGet(null, 'connectedToServer'));
@@ -40,7 +41,8 @@ module.exports = {
         rustplus.tokensReplenishTaskId = setInterval(rustplus.replenishTokens.bind(rustplus), 1000);
 
         /* Request the map. Act as a check to see if connection is truly operational. */
-        const map = await rustplus.getMapAsync(3 * 60 * 1000); /* 3 min timeout */
+            const map = await rustplus.getMapAsync(3 * 60 * 1000); /* 3 min timeout */
+        
         if (!(await rustplus.isResponseValid(map))) {
             rustplus.log(client.intlGet(null, 'errorCap'),
                 client.intlGet(null, 'somethingWrongWithConnection'), 'error');
@@ -60,6 +62,13 @@ module.exports = {
         rustplus.log(client.intlGet(null, 'connectedCap'), client.intlGet(null, 'rustplusOperational'));
 
         const info = await rustplus.getInfoAsync();
+if (await rustplus.isResponseValid(info)) {
+    // Добавить проверку для старых версий протобуфера
+    if (!info.info.hasOwnProperty('queuedPlayers')) {
+        info.info.queuedPlayers = 0;
+    }
+    rustplus.info = new Info(info.info);
+}
         if (await rustplus.isResponseValid(info)) rustplus.info = new Info(info.info)
 
         if (client.rustplusMaps.hasOwnProperty(guildId)) {
@@ -110,5 +119,11 @@ module.exports = {
         rustplus.isOperational = true;
 
         rustplus.updateLeaderRustPlusLiteInstance();
+    } catch (error) {
+        if (error.message.includes('missing required')) {
+            rustplus.log('Ошибка protobuf:', error.message);
+            // Действия при ошибке
+        }
+    }
     },
 };

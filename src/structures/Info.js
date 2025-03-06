@@ -31,9 +31,14 @@ class Info {
         this._wipeTime = info.wipeTime;
         this._players = info.players;
         this._maxPlayers = info.maxPlayers;
-        this._queuedPlayers = info.queuedPlayers;
+        this._queuedPlayers = info.queuedPlayers || 0;;
         this._seed = info.seed;
         this._salt = info.salt;
+        
+        this.logoImage = info.logoImage;
+        this.nexus = info.nexus || '';
+        this.nexusZone = info.nexusZone || '';
+        
 
         this._correctedMapSize = Map.getCorrectedMapSize(info.mapSize);
     }
