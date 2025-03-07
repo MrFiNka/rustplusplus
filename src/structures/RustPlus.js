@@ -2065,7 +2065,7 @@ class RustPlus extends RustPlusLib {
 
     getCommandPop(isInfoChannel = false) {
         // Добавить проверку на существование queuedPlayers
-        const queued = this.info.queuedPlayers || 0;
+        const queued = 0;
         
         if (isInfoChannel) {
             return `${this.info.players}${queued > 0 ? `(${queued})` : ''}/${this.info.maxPlayers}`;

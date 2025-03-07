@@ -62,13 +62,7 @@ module.exports = {
         rustplus.log(client.intlGet(null, 'connectedCap'), client.intlGet(null, 'rustplusOperational'));
 
         const info = await rustplus.getInfoAsync();
-if (await rustplus.isResponseValid(info)) {
-    // Добавить проверку для старых версий протобуфера
-    if (!info.info.hasOwnProperty('queuedPlayers')) {
-        info.info.queuedPlayers = 0;
-    }
-    rustplus.info = new Info(info.info);
-}
+
         if (await rustplus.isResponseValid(info)) rustplus.info = new Info(info.info)
 
         if (client.rustplusMaps.hasOwnProperty(guildId)) {
