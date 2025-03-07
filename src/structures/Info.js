@@ -85,7 +85,7 @@ class Info {
     /* Other checkers */
     isMaxPlayersIncreased(info) { return ((this.maxPlayers) < (info.maxPlayers)); }
     isMaxPlayersDecreased(info) { return ((this.maxPlayers) > (info.maxPlayers)); }
-    isQueue() { return (this.queuedPlayers !== 0); }
+ //   isQueue() { return (this.queuedPlayers !== 0); }
 
     updateInfo(info) {
         this.name = info.name;

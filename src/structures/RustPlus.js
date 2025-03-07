@@ -458,9 +458,9 @@ class RustPlus extends RustPlusLib {
             });
     
             // Патч для отсутствующего queuedPlayers
-            if (response?.info && typeof response.info.queuedPlayers === 'undefined') {
-                response.info.queuedPlayers = 0;
-            }
+       //     if (response?.info && typeof response.info.queuedPlayers === 'undefined') {
+     //           response.info.queuedPlayers = 0;
+    //        }
     
             return response;
         }
