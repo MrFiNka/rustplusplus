@@ -2157,7 +2157,7 @@ class RustPlus extends RustPlusLib {
             name: memberName
         });
     }
-
+/*
     getCommandRecycle(command) {
         const prefix = this.generalSettings.prefix;
         const commandRecycle = `${prefix}${Client.client.intlGet(this.guildId, 'commandSyntaxRecycle')}`;
@@ -2204,7 +2204,7 @@ class RustPlus extends RustPlusLib {
             });
             return str;
         }
-
+ 
         const recycleData = Client.client.rustlabs.getRecycleDataFromArray([
             { itemId: recycleDetails[0], quantity: quantity, itemIsBlueprint: false }
         ]);
@@ -2216,8 +2216,9 @@ class RustPlus extends RustPlusLib {
         str = str.slice(0, -2);
 
         return str;
+        
     }
-
+*/
     getCommandResearch(command) {
         const prefix = this.generalSettings.prefix;
         const commandResearch = `${prefix}${Client.client.intlGet(this.guildId, 'commandSyntaxResearch')}`;

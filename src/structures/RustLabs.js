@@ -345,8 +345,9 @@ class RustLabs {
      *  @return {Object} An object with recycler, shredder and safe-zone-recycler recycle data where
      *          the all recycled items have (itemId, quantity, itemIsBlueprint).
      */
+    /*
     getRecycleDataFromArray(items) {
-        /* Remove element duplicates */
+        
         const mergedItems = [];
         for (const item of items) {
             const itemId = (typeof (item.itemId) === 'string') ? item.itemId : item.itemId.toString();
@@ -377,7 +378,7 @@ class RustLabs {
                         continue;
                     }
 
-                    /* Can the item be recycled further? */
+                    
                     if (this.recycleData[item.itemId][recyclerType]['yield'].length > 0 && !item.itemIsBlueprint &&
                         !IGNORED_RECYCLE_ITEMS.includes(item.itemId)) {
                         noMoreIterations = false;
@@ -422,7 +423,7 @@ class RustLabs {
         return recycleData;
     }
 
-
+*/
     /***********************************************************************************
      *  Durability functions
      **********************************************************************************/

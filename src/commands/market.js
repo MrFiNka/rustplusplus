@@ -219,7 +219,7 @@ module.exports = {
 
                             foundLines += `+ [${vendingMachine.location.string}] `;
                             foundLines += `${orderQuantity}x ${orderItemName}`;
-                            foundLines += `${(orderItemIsBlueprint) ? ' (BP)' : ''} for `;
+                          //  foundLines += `${(orderItemIsBlueprint) ? ' (BP)' : ''} for `;
                             foundLines += `${orderCostPerItem}x ${orderCurrencyName}`;
                             foundLines += `${(orderCurrencyIsBlueprint) ? ' (BP)' : ''} `;
                             foundLines += `(${orderAmountInStock} ${leftString})\n`;

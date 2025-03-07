@@ -577,7 +577,7 @@ module.exports = {
 
         await Client.client.interactionEditReply(interaction, content);
     },
-
+/*
     sendRecycleMessage: async function (interaction, recycleDetails, quantity, recyclerType) {
         const content = {
             embeds: [DiscordEmbeds.getRecycleEmbed(interaction.guildId, recycleDetails, quantity, recyclerType)],
@@ -586,7 +586,7 @@ module.exports = {
 
         await Client.client.interactionEditReply(interaction, content);
     },
-
+*/
     sendBattlemetricsEventMessage: async function (guildId, battlemetricsId, title, description, fields = null, everyone = false) {
         const instance = Client.client.getInstance(guildId);
 
