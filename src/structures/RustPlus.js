@@ -640,32 +640,45 @@ class RustPlus extends RustPlusLib {
     }
 
     async isResponseValid(response) {
+        // Обработка объектов ошибок
+        if (response instanceof Error) {
+            if (response.name === 'ProtocolError') {
+                this.log(Client.client.intlGet(null, 'errorCap'),
+                    `Protobuf Error: ${response.message}`, 'error');
+                // Дополнительное логирование данных из ошибки
+                if (response.instance) {
+                    console.error('Error instance data:', response.instance);
+                }
+                return false;
+            }
+            // Обработка других типов ошибок
+            this.log(Client.client.intlGet(null, 'errorCap'),
+                response.message, 'error');
+            return false;
+        }
+    
+        // Существующие проверки
         if (response === undefined) {
             this.log(Client.client.intlGet(null, 'errorCap'),
                 Client.client.intlGet(null, 'responseIsUndefined'), 'error');
             return false;
         }
-        else if (response.toString() === 'Error: Timeout reached while waiting for response') {
+        if (response.toString() === 'Error: Timeout reached while waiting for response') {
             this.log(Client.client.intlGet(null, 'errorCap'),
                 Client.client.intlGet(null, 'responseTimeout'), 'error');
             return false;
         }
-        else if (response.hasOwnProperty('error')) {
-            this.log(Client.client.intlGet(null, 'errorCap'), Client.client.intlGet(null, 'responseContainError', {
-                error: response.error
-            }), 'error');
+        if (response.hasOwnProperty('error')) {
+            this.log(Client.client.intlGet(null, 'errorCap'), 
+                Client.client.intlGet(null, 'responseContainError', {
+                    error: response.error
+                }), 'error');
             return false;
         }
-        else if (Object.keys(response).length === 0) {
+        if (Object.keys(response).length === 0) {
             this.log(Client.client.intlGet(null, 'errorCap'),
                 Client.client.intlGet(null, 'responseIsEmpty'), 'error');
             clearInterval(this.pollingTaskId);
-            return false;
-        }
-        else if (response.toString().includes('ProtocolError')) {
-            // Обработка ошибок протобуфера
-            this.log(Client.client.intlGet(null, 'errorCap'),
-                `Protobuf Error: ${response.message}`, 'error');
             return false;
         }
         return true;
