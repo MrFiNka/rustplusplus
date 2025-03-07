@@ -29,7 +29,7 @@
         "discord-api-types": "^0.37.37",
         "discord.js": "^14.8.0",
         "ffmpeg-static": "^5.1.0",
-        "gm": "^1.25.0",
+        "gm": "^1.25.1",
         "jimp": "^0.22.7",
         "libsodium-wrappers": "^0.7.11",
         "lodash": "^4.17.21",
