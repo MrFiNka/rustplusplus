@@ -31,7 +31,7 @@ class Info {
         this._wipeTime = info.wipeTime;
         this._players = info.players;
         this._maxPlayers = info.maxPlayers;
-        this._queuedPlayers = info.queuedPlayers || 0;;
+        this._queuedPlayers = info.queuedPlayers || 0;
         this._seed = info.seed;
         this._salt = info.salt;
         
