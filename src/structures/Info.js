@@ -31,7 +31,7 @@ class Info {
         this._wipeTime = info.wipeTime;
         this._players = info.players;
         this._maxPlayers = info.maxPlayers;
-        this._queuedPlayers = 0;
+       // this._queuedPlayers = 0;
         this._seed = info.seed;
         this._salt = info.salt;
         
@@ -60,8 +60,8 @@ class Info {
     set players(players) { this._players = players; }
     get maxPlayers() { return this._maxPlayers; }
     set maxPlayers(maxPlayers) { this._maxPlayers = maxPlayers; }
-    get queuedPlayers() { return this._queuedPlayers; }
-    set queuedPlayers(queuedPlayers) { this._queuedPlayers = queuedPlayers; }
+  //  get queuedPlayers() { return this._queuedPlayers; }
+   // set queuedPlayers(queuedPlayers) { this._queuedPlayers = queuedPlayers; }
     get seed() { return this._seed; }
     set seed(seed) { this._seed = seed; }
     get salt() { return this._salt; }
@@ -78,7 +78,7 @@ class Info {
     isWipeTimeChanged(info) { return ((this.wipeTime) !== (info.wipeTime)); }
     isPlayersChanged(info) { return ((this.players) !== (info.players)); }
     isMaxPlayersChanged(info) { return ((this.maxPlayers) !== (info.maxPlayers)); }
-    isQueuedPlayersChanged(info) { return ((this.queuedPlayers) !== (info.queuedPlayers)); }
+  //  isQueuedPlayersChanged(info) { return ((this.queuedPlayers) !== (info.queuedPlayers)); }
     isSeedChanged(info) { return ((this.seed) !== (info.seed)); }
     isSaltChanged(info) { return ((this.salt) !== (info.salt)); }
 
