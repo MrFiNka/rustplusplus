@@ -613,3 +613,13 @@ async function checkTokenExpiration(client) {
 
 
 
+//async function newsNews(client, guild, full, data, body) {
+//    const instance = client.getInstance(guild.id);
+//
+//    const content = {
+//        embeds: [DiscordEmbeds.getNewsEmbed(guild.id, data)],
+//        components: [DiscordButtons.getNewsButton(guild.id, body, isValidUrl(body.url))]
+//    }
+//
+//    await DiscordMessages.sendMessage(guild.id, content, null, instance.channelId.activity);
+//}

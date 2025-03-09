@@ -742,6 +742,7 @@
     "timeSinceLastSinceDestroyedLong": "C момента последнего вертолёта прошло {time1}. Вертолёт сбили {time2} назад.",
     "timeSinceLastSinceDestroyedShort": "Был {time1} назад. \nСбит {time2} назад.",
     "timeSincePatrolHelicopterWasOnMap": "Патрульный вертолёт был {time} назад.",
+    "timeSinceTravelingVendorWasOnMap": "{time} since the Traveling Vendor was on the map.",
     "timeSinceWipe": "С последнего вайпа прошло {time}.",
     "timeTill": "Время до {event}",
     "timeTillDaylight": "Через {time} будет рассвет.",

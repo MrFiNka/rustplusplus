@@ -74,10 +74,10 @@ async function checkForUpdates() {
                 Новая версия: ${remote.version}`;
                 console.log(updateMessage);
 
-                client.log(client.intlGet(null, 'infoCap'), client.intlGet(null, 'updateInfo', {
-                    current: local.version,
-                    new: remote.version,
-                }), 'warn');
+ //               await client.log(client.intlGet(null, 'infoCap'), client.intlGet(null, 'updateInfo', {
+ //                   current: local.version,
+ //                   new: remote.version,
+ //               }), 'warn');
 
                 await sendToDiscordWebhook(updateMessage);
             }
