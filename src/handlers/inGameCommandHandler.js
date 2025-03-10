@@ -157,6 +157,10 @@ module.exports = {
             commandLowerCase === `${prefix}${client.intlGet(guildId, 'commandSyntaxSmall')}`) {
             rustplus.sendInGameMessage(rustplus.getCommandSmall());
         }
+        else if (commandLowerCase.startsWith(`${prefix}${client.intlGet('en', 'commandSyntaxSwitch')}`) ||
+            commandLowerCase.startsWith(`${prefix}${client.intlGet(guildId, 'commandSyntaxSwitch')}`)) {
+            rustplus.sendInGameMessage(await rustplus.getCommandSwitch(command));
+        }
         else if (commandLowerCase.startsWith(`${prefix}${client.intlGet('en', 'commandSyntaxStack')}`) ||
             commandLowerCase.startsWith(`${prefix}${client.intlGet(guildId, 'commandSyntaxStack')}`)) {
             rustplus.sendInGameMessage(await rustplus.getCommandStack(command));

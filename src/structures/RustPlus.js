@@ -2347,6 +2347,31 @@ class RustPlus extends RustPlusLib {
         return strings;
     }
 
+    getCommandSwitch(command) {
+        const args = command.split(' ');
+        if (args.length < 3) return this.intlGet(null, 'invalidCommandSyntax');
+    
+        const entityId = args[1];
+        const commandName = args.slice(2).join(' ');
+        
+        const instance = Client.client.getInstance(this.guildId);
+        const switches = instance.serverList[this.serverId]?.switches;
+    
+    
+        // 2. Проверка существования переключателя
+        if (!switches[entityId]) {
+            return this.intlGet(null, 'switchNotFound', { entityId: entityId });
+        }
+    
+        // 3. Обновление команды
+        switches[entityId].command = commandName;
+        
+        return this.intlGet(null, 'switchCommandResponse', {
+            entityId: entityId,
+            command: commandName
+        });
+    }
+
     getCommandStack(command) {
         const prefix = this.generalSettings.prefix;
         const commandStack = `${prefix}${Client.client.intlGet(this.guildId, 'commandSyntaxStack')}`;
