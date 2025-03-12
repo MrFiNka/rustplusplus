@@ -210,6 +210,7 @@
     "commandsHelpDesc": "Показать информацию о боте.",
     "commandsHelpHowToCredentials": "Как зарегистрировать учетные данные",
     "commandsHelpHowToPairServer": "Как связать бота с сервером Rust",
+    "commandsInfoDesc": "Показать информацию о сервере хостинга",
     "commandsInfoOperationSystem": "**Операционная система**",
     "commandsInfoUptime": "**Uptime**",
     "commandsInfoHostname": "**Hostname**",
