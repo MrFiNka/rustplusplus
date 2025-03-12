@@ -326,6 +326,16 @@ async function pairingEntitySwitch(client, guild, title, message, body) {
         client.setInstance(guild.id, instance);
 
         await DiscordMessages.sendSmartSwitchMessage(guild.id, serverId, body.entityId);
+        if (!entityExist) {
+            const rustplus = client.rustplusInstances[guild.id];
+            if (rustplus && serverId === rustplus.serverId) {
+                // Формируем сообщение с подстановкой entityId
+                const str = client.intlGet(guild.id, 'switchPairingMessage', {
+                    entityId: body.entityId // Передаем только ID
+                });
+                await rustplus.sendInGameMessage(str);
+            }
+        }
     }
 }
 
@@ -613,3 +623,13 @@ async function checkTokenExpiration(client) {
 
 
 
+//async function newsNews(client, guild, full, data, body) {
+//    const instance = client.getInstance(guild.id);
+//
+//    const content = {
+//        embeds: [DiscordEmbeds.getNewsEmbed(guild.id, data)],
+//        components: [DiscordButtons.getNewsButton(guild.id, body, isValidUrl(body.url))]
+//    }
+//
+//    await DiscordMessages.sendMessage(guild.id, content, null, instance.channelId.activity);
+//}

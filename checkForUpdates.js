@@ -60,7 +60,7 @@ async function onBotStartup() {
 
 
 
-async function checkForUpdates() {
+async function checkForUpdates(client) {
     const remoteUrl = 'https://raw.githubusercontent.com/alexemanuelol/rustplusplus/main/package.json';
     const local = localPackage;
 
@@ -74,10 +74,10 @@ async function checkForUpdates() {
                 Новая версия: ${remote.version}`;
                 console.log(updateMessage);
 
-                client.log(client.intlGet(null, 'infoCap'), client.intlGet(null, 'updateInfo', {
+                await client.log(client.intlGet(null, 'infoCap'), client.intlGet(null, 'updateInfo', {
                     current: local.version,
                     new: remote.version,
-                }), 'warn');
+               }), 'warn');
 
                 await sendToDiscordWebhook(updateMessage);
             }

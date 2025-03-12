@@ -14,10 +14,7 @@ const previousErrors = new Set();
 
 const DiscordBot = require('./src/structures/DiscordBot');
 const { onBotStartup, checkForUpdates } = require('./checkForUpdates');
-(async () => {
-    await onBotStartup();
-    await checkForUpdates();
-})();
+
 
 createMissingDirectories();
 
@@ -35,6 +32,11 @@ const client = new DiscordBot({
 });
 
 client.build();
+
+(async () => {
+    await onBotStartup();
+    await checkForUpdates(client);
+})();
 
 function createMissingDirectories() {
     if (!Fs.existsSync(Path.join(__dirname, 'logs'))) {
