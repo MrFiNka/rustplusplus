@@ -519,7 +519,7 @@
     "name": "Name",
     "nameChangeHistory": "Name Change History",
     "new": "New",
-    "newVendingMachine": "New Vending Machine located at {location}.",
+    "newVendingMachine": "New :vending-machine: named \"{name}\" at {location} with {orders} orders.",
     "newsCap": "NEWS",
     "nextFullWipe": "Next full wipe",
     "nextMapWipe": "Next map wipe",

@@ -308,6 +308,9 @@ class MapMarkers {
     }
 
     updateVendingMachines(mapMarkers) {
+        let type = this.types.VendingMachine;
+        let currentMarkers = mapMarkers.markers;
+
         let newMarkers = this.getNewMarkersOfTypeXY(this.types.VendingMachine, mapMarkers.markers);
         let leftMarkers = this.getLeftMarkersOfTypeXY(this.types.VendingMachine, mapMarkers.markers);
         let remainingMarkers = this.getRemainingMarkersOfTypeXY(this.types.VendingMachine, mapMarkers.markers);
@@ -323,7 +326,15 @@ class MapMarkers {
                 if (!this.knownVendingMachines.some(e => e.x === marker.x && e.y === marker.y)) {
                     this.rustplus.sendEvent(
                         this.rustplus.notificationSettings.vendingMachineDetectedSetting,
-                        this.client.intlGet(this.rustplus.guildId, 'newVendingMachine', { location: pos.string }),
+                        this.client.intlGet(
+                            this.rustplus.guildId, 
+                            'newVendingMachine', 
+                            { 
+                                name: marker.name,
+                                location: pos.string,
+                                orders: marker.sellOrders?.length || 0 
+                            }
+                        ),
                         null,
                         Constants.COLOR_NEW_VENDING_MACHINE);
                 }
