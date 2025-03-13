@@ -522,7 +522,7 @@
     "name": "Имя",
     "nameChangeHistory": "История изменения имени",
     "new": "Новый",
-    "newVendingMachine": "Новый :vending-machine: названный \"{name}\" в {location} с {orders} заказами.",
+    "newVendingMachine": "Новый :vending.machine: названный \"{name}\" в {location} с {orders} заказами.",
     "newsCap": "NEWS",
     "nextFullWipe": "Следующая полная очистка",
     "nextMapWipe": "Следующая очистка карты",
