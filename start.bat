@@ -4,7 +4,7 @@ echo ---------------------- START (%DATE:~0,2%.%DATE:~3,2% %TIME:~0,8%) --------
 git pull
 #export NPM_CONFIG_YES=true
 npm install --legacy-peer-deps --force --yes
-npm start run
+node .
 rm -vrf logs
 rm -vrf maps
 echo ---------------------- STOP  (%DATE:~0,2%.%DATE:~3,2% %TIME:~0,8%) ----------------------
