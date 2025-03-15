@@ -693,7 +693,7 @@
     "smartAlarmNotifyExtendSetting": "- These Alarm notifications will use the title and message given to the Smart Alarm in-game.\n- These Smart Alarms might not be available in the alarms text channel in discord.",
     "smartDeviceNotFound": "{device} could not be found! Either it have been destroyed or {user} have lost tool cupboard access.",
     "switchPairingMessage": "New :smart.switch:! Use '!switch {entityId} <name>' to set the command.",
-    "switchCommandResponse": "Command for switch {entityId} updated to: {command}",
+    "switchCommandResponse": "Command for :smart.switch: {entityId} updated to: {command}",
     "invalidCommandSyntax": "Invalid command syntax. Usage: `!switch <entityId> <name>`",
     "switchNotFound": "❌ Switch with ID {entityId} not found",
     "smartSwitch": "Smart Switch",

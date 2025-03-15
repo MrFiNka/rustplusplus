@@ -2349,7 +2349,7 @@ class RustPlus extends RustPlusLib {
 
     getCommandSwitch(command) {
         const args = command.split(' ');
-        if (args.length < 3) return this.intlGet(null, 'invalidCommandSyntax');
+        if (args.length < 3) return Client.client.intlGet(this.guildId, 'invalidCommandSyntax');
     
         const entityId = args[1];
         const commandName = args.slice(2).join(' ');
@@ -2360,13 +2360,13 @@ class RustPlus extends RustPlusLib {
     
         // 2. Проверка существования переключателя
         if (!switches[entityId]) {
-            return this.intlGet(null, 'switchNotFound', { entityId: entityId });
+            return Client.client.intlGet(this.guildId, 'switchNotFound', { entityId: entityId });
         }
     
         // 3. Обновление команды
         switches[entityId].command = commandName;
         
-        return this.intlGet(null, 'switchCommandResponse', {
+        return Client.client.intlGet(this.guildId, 'switchCommandResponse', {
             entityId: entityId,
             command: commandName
         });
