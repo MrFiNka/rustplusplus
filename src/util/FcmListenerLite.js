@@ -236,7 +236,7 @@ async function pairingEntitySwitch(client, guild, title, message, body) {
             const rustplus = client.rustplusInstances[guild.id];
             if (rustplus && serverId === rustplus.serverId) {
                 // Формируем сообщение с подстановкой entityId
-                const str = client.intlGet(guild.id, 'switchPairingMessage', { entityId: switches[body.entityId].command });
+                const str = client.intlGet(guild.id, 'switchPairingMessage', { command: switches[body.entityId].command });
                 await rustplus.sendInGameMessage(str);
             }
         }
