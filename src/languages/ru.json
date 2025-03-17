@@ -692,7 +692,7 @@
     "smartAlarmEditSuccess": "Настройки умной сигнализации {name} изменены.",
     "smartAlarmNotifyExtendSetting": "- Эти уведомления о сигналах тревоги будут использовать название и сообщение, присвоенные умной сигнализацией.\n- Эта сигнализация может быть недоступна в текстовом канале alarms в Discord",
     "smartDeviceNotFound": "{device} не удалось найти! Либо он уничтожен, либо {user} потерял доступ к этому устройству.",
-    "switchPairingMessage": "{command} Новый :smart.switch:! Используйте '!switch {command} <name>' для установки команды.",
+    "switchPairingMessage": "Новый :smart.switch:! Используйте '!switch {command} <name>' для установки команды.",
     "switchCommandResponse": "Команда для :smart.switch: {entityId} изменена на: {command}",
     "invalidCommandSyntax": "Неправильный синтаксис команды. Формат: `!switch <ID_устройства> <название>`",
     "switchNotFound": "❌ Переключатель с ID {entityId} не найден",

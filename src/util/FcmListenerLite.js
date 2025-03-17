@@ -239,7 +239,7 @@ async function pairingEntitySwitch(client, guild, title, message, body) {
                 console.log('[DEBUG] Command:', switches[body.entityId].command);
                 console.log('[DEBUG] body.entityId:', body.entityId);
                 const str = client.intlGet(guild.id, 'switchPairingMessage', { command: switches[body.entityId].command });
-                await rustplus.sendInGameMessage(str);
+                rustplus.sendInGameMessage(str);
             }
         }
     }
