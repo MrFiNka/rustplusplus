@@ -154,6 +154,7 @@
     "commandSyntaxRemove": "remove",
     "commandSyntaxResearch": "research",
     "commandSyntaxSearch": "search",
+    "commandSyntaxSwitch": "switch",
     "commandSyntaxSend": "send",
     "commandSyntaxSmall": "small",
     "commandSyntaxStack": "stack",
