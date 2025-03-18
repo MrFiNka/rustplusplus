@@ -30,8 +30,9 @@ const DiscordTools = require('./discordTools.js');
 module.exports = async (client, guild, forced = false) => {
     const instance = client.getInstance(guild.id);
     const channel = DiscordTools.getTextChannelById(guild.id, instance.channelId.settings);
+    const channelinfo = DiscordTools.getTextChannelById(guild.id, instance.channelId.information);
 
-    if (!channel) {
+    if (!channel || !channelinfo) {
         client.log(client.intlGet(null, 'errorCap'), 'SetupSettingsMenu: ' +
             client.intlGet(null, 'invalidGuildOrChannel'), 'error');
         return;
@@ -40,6 +41,7 @@ module.exports = async (client, guild, forced = false) => {
     if (instance.firstTime || forced) {
         await DiscordTools.clearTextChannel(guild.id, instance.channelId.settings, 100);
 
+        await setupInformation(client, guild.id, channelinfo);
         await setupGeneralSettings(client, guild.id, channel);
         await setupNotificationSettings(client, guild.id, channel);
 
@@ -49,6 +51,35 @@ module.exports = async (client, guild, forced = false) => {
 
 };
 
+async function setupGeneralSettings(client, guildId, channel) {
+    const instance = client.getInstance(guildId);
+
+    // Динамическая статистика
+        const serverCount = client.guilds.cache.size;
+        const badgeURL = `https://img.shields.io/badge/Серверов-${serverCount}-orange?logo=serverless&style=flat-square`;
+    
+        const supportEmbed = new EmbedBuilder()
+            .setColor(0xDD6E0F)
+            .setTitle('🔗 Ссылки')
+            .setDescription(
+                `💬 [Техподдержка](${Config.general.supportServer})\n` +
+                `❤️ [Поддержать разработчика](${Config.general.donatelink} "Спасибо за вашу поддержку!")`
+            )
+            .setFooter({ 
+                text: `Работает на ${serverCount} серверах.`,
+                iconURL: badgeURL
+            })
+            .setThumbnail(client.user.displayAvatarURL({ 
+                format: 'png', 
+                size: 512,
+                dynamic: true 
+            }))
+    
+        await client.messageSend(channelinfo, { 
+            embeds: [DiscordEmbeds.getHelpEmbed(guildId), supportEmbed],
+            components: DiscordButtons.getHelpButtons()
+        }).catch(console.error);
+}
 async function setupGeneralSettings(client, guildId, channel) {
     const instance = client.getInstance(guildId);
 

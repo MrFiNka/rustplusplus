@@ -54,6 +54,7 @@ module.exports = async (client, guild) => {
     if (serverAge > 300_000 && (Date.now() - botJoinDate) > 120_000) return;
 
     // Динамическая статистика
+    /*
     const serverCount = client.guilds.cache.size;
     const badgeURL = `https://img.shields.io/badge/Серверов-${serverCount}-orange?logo=serverless&style=flat-square`;
 
@@ -78,4 +79,5 @@ module.exports = async (client, guild) => {
         embeds: [DiscordEmbeds.getHelpEmbed(guild.id), supportEmbed],
         components: DiscordButtons.getHelpButtons()
     }).catch(console.error);
+    */
 };
