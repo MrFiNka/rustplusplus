@@ -51,7 +51,7 @@ module.exports = async (client, guild, forced = false) => {
 
 };
 
-async function setupGeneralSettings(client, guildId, channel) {
+async function setupInformation(client, guildId, channel) {
     const instance = client.getInstance(guildId);
 
     // Динамическая статистика
