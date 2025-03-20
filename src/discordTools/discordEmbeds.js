@@ -1139,6 +1139,28 @@ module.exports = {
         });
     },
 
+    getSupportEmbed: function(client, guildId) {
+        const serverCount = client.guilds.cache.size;
+        const badgeURL = `https://img.shields.io/badge/Серверов-${serverCount}-orange?logo=serverless&style=flat-square`;
+
+        return this.getEmbed({
+            color: 0xDD6E0F,
+            title: '🔗 Ссылки',
+            description: 
+                `💬 [Техподдержка](${Config.general.supportServer})\n` +
+                `❤️ [Поддержать разработчика](${Config.general.donatelink} "Спасибо за вашу поддержку!")`,
+            footer: { 
+                text: `Работает на ${serverCount} серверах.`,
+                iconURL: badgeURL
+            },
+            thumbnail: client.user.displayAvatarURL({ 
+                format: 'png', 
+                size: 512,
+                dynamic: true 
+            })
+        });
+    },
+    
     getInfoEmbed: async function (guildId) {
         const osInfo = `${os.type()} ${os.release()}`;
         const osUptime = `${Math.floor(os.uptime() / 86400)} Days ${String(Math.floor((os.uptime() % 86400) / 3600)).padStart(2, '0')}h ${String(Math.floor((os.uptime() % 3600) / 60)).padStart(2, '0')}m ${String(Math.floor(os.uptime() % 60)).padStart(2, '0')}s`;
