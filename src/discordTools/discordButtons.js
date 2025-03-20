@@ -516,7 +516,7 @@ module.exports = {
                 module.exports.getButton({
                     style: Discord.ButtonStyle.Link,
                     label: 'CREDENTIALS',
-                    url: 'https://github.com/MrFiNka/rustplusplus-Credential-Application/releases/v1.4.0'
+                    url: 'https://github.com/MrFiNka/rustplusplus/blob/master/docs/credentials_web_version.md'
                 })
             )];
     },
