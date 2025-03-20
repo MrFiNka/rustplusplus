@@ -53,7 +53,7 @@ module.exports = async (client, guild, forced = false) => {
 
 };
 
-async function setupInformation(client, guildId, channel) {
+async function setupInformation(client, guildId, channelinfo) {
     const instance = client.getInstance(guildId);
 
     // Динамическая статистика
