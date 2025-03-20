@@ -28,6 +28,8 @@ const InstanceUtils = require('../util/instanceUtils.js');
 const Timer = require('../util/timer');
 const _ = require('lodash');
 
+const Config = require('../../config');
+
 module.exports = {
     getEmbed: function (options = {}) {
         const embed = new Discord.EmbedBuilder();
@@ -1160,7 +1162,7 @@ module.exports = {
             })
         });
     },
-    
+
     getInfoEmbed: async function (guildId) {
         const osInfo = `${os.type()} ${os.release()}`;
         const osUptime = `${Math.floor(os.uptime() / 86400)} Days ${String(Math.floor((os.uptime() % 86400) / 3600)).padStart(2, '0')}h ${String(Math.floor((os.uptime() % 3600) / 60)).padStart(2, '0')}m ${String(Math.floor(os.uptime() % 60)).padStart(2, '0')}s`;
