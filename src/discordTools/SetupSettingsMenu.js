@@ -18,7 +18,7 @@
 
 */
 
-const Discord = require('discord.js');
+const { Discord, EmbedBuilder } = require('discord.js');
 const Path = require('path');
 
 const Constants = require('../util/constants.js');
