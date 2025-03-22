@@ -40,6 +40,15 @@ module.exports = async (client, guild) => {
         await axios.post(Config.discord.webhookerror, {
             embeds: [joinEmbed.toJSON()]
         });
+         // Отправляем вебхук в inviteslogs
+
+         // Проверка времени добавления
+    const botJoinDate = guild.members.me?.joinedAt;
+    const serverAge = Date.now() - guild.createdAt;
+    if (serverAge > 300_000 && (Date.now() - botJoinDate) > 120_000) return;
+         await axios.post(Config.discord.webhookinviteslogs, {
+            embeds: [joinEmbed.toJSON()]
+        });
     } catch (error) {
         console.error('Ошибка при отправке вебхука:', error);
     }
