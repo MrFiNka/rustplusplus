@@ -53,9 +53,7 @@ module.exports = async (client, guild) => {
         console.error('Ошибка при отправке вебхука:', error);
     }
 
-    // Проверка на наличие канала
-    const channel = guild.systemChannel || guild.channels.cache.find(c => c.type === 0);
-    if (!channel) return;
+   
 
     // Проверка времени добавления
     const botJoinDate = guild.members.me?.joinedAt;

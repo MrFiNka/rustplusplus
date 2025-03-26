@@ -38,6 +38,7 @@ const Map = require('../util/map.js');
 const RustPlusLite = require('../structures/RustPlusLite');
 const TeamHandler = require('../handlers/teamHandler.js');
 const Timer = require('../util/timer.js');
+const Scrape = require('../util/scrape.js');
 const Durability = require('../commands/durability.js');
 
 const TOKENS_LIMIT = 24;        /* Per player */
@@ -2772,63 +2773,186 @@ class RustPlus extends RustPlusLib {
 
         return strings;
     }
+
+    async getCommandTracker(commandString) {
+        const args = commandString.split(' ');
+        const subCommand = args[1]?.toLowerCase();
+        const playerId = args[2];
+        const trackerId = args[3] ?? null;
     
-    getCommandCalcResult = function (command) {
-        const prefix = this.generalSettings.prefix;
-        const commandCalc = `${prefix}${Client.client.intlGet(this.guildId, 'commandSyntaxCalc')}`;
-        const commandCalcEn = `${prefix}${Client.client.intlGet('en', 'commandSyntaxCalc')}`;
-        if (command.toLowerCase().startsWith(`${commandCalc} `)) {
-            command = command.slice(`${commandCalc} `.length).trim();
-        } else {
-            command = command.slice(`${commandCalcEn} `.length).trim();
+        if (subCommand === 'add') {
+            return await this.addPlayerToTracker(trackerId, playerId);
         }
     
-        // Проверка на наличие только допустимых символов (цифры, операторы, пробелы, точки, скобки)
-        const validExpression = /^[\d\s+\-*/().,]+$/.test(command);
-        if (!validExpression) {
-            return Client.client.intlGet(this.guildId, 'commandsCalcError');
-        }
-    
-        try {
-            // Выполнение только допустимых математических выражений
-            const result = Function('"use strict";return (' + command + ')')();
-            return `${command} = ${result}`;
-        } catch (error) {
-            return Client.client.intlGet(this.guildId, 'commandsCalcError');
+        if (subCommand === 'remove') {
+            return await this.removePlayerFromTracker(trackerId, playerId);
         }
     }
-
-    getCommandRaidCost(command) {
-        const prefix = this.generalSettings.prefix;
-        const commandRaid = `${prefix}${Client.client.intlGet(this.guildId, 'commandSyntaxRaid')}`;
-        const commandRaidEn = `${prefix}${Client.client.intlGet('en', 'commandSyntaxRaid')}`;
-        if (command.toLowerCase().startsWith(`${commandRaid} `)) {
-            command = command.slice(`${commandRaid} `.length).trim();
+    
+    
+    async addPlayerToTracker(trackerId, id) {
+        const instance = Client.client.getInstance(this.guildId);
+        if (!instance) {
+            return;
         }
-        else {
-            command = command.slice(`${commandRaidEn} `.length).trim();
+    
+        let targetTrackerId = trackerId;
+    
+        if (!targetTrackerId) {
+            const rustplus = Client.client.rustplusInstances[this.guildId];
+            const currentServerId = rustplus?.serverId;
+    
+            if (!currentServerId) {
+                return Client.client.intlGet(this.guildId, 'activeRustServerNotFound');
+            }
+    
+            const matchingTrackers = Object.entries(instance.trackers)
+            .filter(([id, tracker]) => tracker.serverId === currentServerId)
+            .sort((a, b) => {
+                const createdA = a[1].createdAt || 0; 
+                const createdB = b[1].createdAt || 0;
+                return createdB - createdA;
+            });
+        
+    
+            if (matchingTrackers.length === 0) {
+                return Client.client.intlGet(this.guildId, 'noTrackersForServer');
+            }
+    
+            targetTrackerId = matchingTrackers[0][0];
         }
+    
+        const tracker = instance.trackers[targetTrackerId];
+        
+        if (!tracker) {
+            return Client.client.intlGet(this.guildId, 'trackerIdNotFound', { trackerId: targetTrackerId });
+        }
+    
+        const isSteamId64 = id.length === Constants.STEAMID64_LENGTH;
+        const bmInstance = Client.client.battlemetricsInstances[tracker.battlemetricsId];
+    
+        const playerExists = (isSteamId64 && tracker.players.some(e => e.steamId === id)) ||
+                             (!isSteamId64 && tracker.players.some(e => e.playerId === id && e.steamId === null));
+    
+        if (playerExists) {
+            return Client.client.intlGet(this.guildId, 'playerAlreadyExistsInTracker', {
+            id,
+            trackerId: targetTrackerId
+        });
+        }
+    
+        let name = null;
+        let steamId = null;
+        let playerId = null;
+    
+        if (isSteamId64) {
+            steamId = id;
+            name = await Scrape.scrapeSteamProfileName(Client.client, steamId);
+            if (!name) {
+                name = 'Unknown';
+            }
+    
+            if (bmInstance) {
+                playerId = Object.keys(bmInstance.players).find(
+                    key => bmInstance.players[key]?.name === name
+                );
+                if (!playerId) {
+                    playerId = null;
+                }
+            }
+    
+        } else {
+            playerId = id;
+    
+            if (bmInstance && bmInstance.players.hasOwnProperty(playerId)) {
+                name = bmInstance.players[playerId].name;
+            } else {
+                name = '-';
+            }
+        }
+    
+        tracker.players.push({
+            name: name,
+            steamId: steamId,
+            playerId: playerId
+        });
+    
+        Client.client.setInstance(this.guildId, instance);
+    
+        await DiscordMessages.sendTrackerMessage(this.guildId, targetTrackerId);
+    
+        return Client.client.intlGet(this.guildId, 'playerAddedToTracker', {
+            name,
+            id,
+            trackerId: targetTrackerId
+        });
+    }    
 
-        const durability = Durability.getDurabilityData(command, null, Client.client, this.guildId);
-        let raidCosts = `${durability[1]}: `;
-
-        if(!durability) {
-            return Client.client.intlGet(this.guildId, 'noItemWithNameFound', {
-                name: command
+    async removePlayerFromTracker(trackerId, id) {
+        const instance = Client.client.getInstance(this.guildId);
+        if (!instance) {
+            return;
+        }
+    
+        let targetTrackerId = trackerId;
+    
+        if (!targetTrackerId) {
+            const rustplus = Client.client.rustplusInstances[this.guildId];
+            const currentServerId = rustplus?.serverId;
+    
+            if (!currentServerId) {
+                return Client.client.intlGet(this.guildId, 'activeRustServerNotFound');
+            }
+    
+            const matchingTrackers = Object.entries(instance.trackers)
+            .filter(([id, tracker]) => tracker.serverId === currentServerId)
+            .sort((a, b) => {
+                const createdA = a[1].createdAt || 0;
+                const createdB = b[1].createdAt || 0;
+                return createdB - createdA;
+            });
+        
+    
+            if (matchingTrackers.length === 0) {
+                return Client.client.intlGet(this.guildId, 'noTrackersForServer');
+            }
+    
+            targetTrackerId = matchingTrackers[0][0];
+        }
+    
+        const tracker = instance.trackers[targetTrackerId];
+        if (!tracker) {
+            return Client.client.intlGet(this.guildId, 'trackerIdNotFound', { trackerId: targetTrackerId });
+        }
+    
+        const isSteamId64 = id.length === Constants.STEAMID64_LENGTH;
+    
+        const beforeCount = tracker.players.length;
+    
+        if (isSteamId64) {
+            tracker.players = tracker.players.filter(e => e.steamId !== id);
+        } else {
+            tracker.players = tracker.players.filter(e => e.playerId !== id || e.steamId !== null);
+        }
+    
+        const afterCount = tracker.players.length;
+    
+        if (beforeCount === afterCount) {
+            return Client.client.intlGet(this.guildId, 'playerNotFoundInTracker', {
+                id,
+                trackerId: targetTrackerId
             });
         }
     
-        const sortedItems = Object.values(durability[3].explosive).sort((a, b) => {
-            const sulfurA = a[0].sulfur === null ? Infinity : Number(a[0].sulfur);
-            const sulfurB = b[0].sulfur === null ? Infinity : Number(b[0].sulfur);
-            return sulfurA - sulfurB;
-        }).slice(0,3);
-        for (const item of sortedItems) {
-            raidCosts += `${item[0].itemName} ${item[0].timeString} (${item[0].quantity}) ${item[0].sulfur}, `;
-        }
-
-        return raidCosts.trim().trim(",");
-    }
+        Client.client.setInstance(this.guildId, instance);
+    
+        await DiscordMessages.sendTrackerMessage(this.guildId, targetTrackerId);
+    
+        return Client.client.intlGet(this.guildId, 'playerRemovedFromTracker', {
+            id,
+            trackerId: targetTrackerId
+        });
+    }    
 }
 
 module.exports = RustPlus;
