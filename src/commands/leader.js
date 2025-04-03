@@ -118,7 +118,7 @@ module.exports = {
 					});
 
 					// Проверяем, привязан ли SteamID игрока к серверу
-          if (!Object.keys(instance.serverListLite[rustplus.serverId]).includes(player.steamId)) {
+					if (!Object.keys(instance.serverListLite[rustplus.serverId]).includes(rustplus.team.leaderSteamId)) {
 						let names = '';
 		     	for (const player of rustplus.team.players) {
 		    		if (Object.keys(instance.serverListLite[rustplus.serverId]).includes(player.steamId)) {
@@ -132,6 +132,7 @@ module.exports = {
 					});
 					rustplus.log(client.intlGet(interaction.guildId, 'infoCap'), reminder);
           }
+				
 
 					await client.interactionEditReply(interaction, DiscordEmbeds.getActionInfoEmbed(0, str,
 						instance.serverList[rustplus.serverId].title));
