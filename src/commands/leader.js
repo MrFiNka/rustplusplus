@@ -110,7 +110,7 @@ module.exports = {
 						await rustplus.team.changeLeadership(player.steamId);
 					}
 					else {
-						await rustplus.leaderRustPlusInstance.promoteToLeaderAsync(player.steamId);
+						rustplus.leaderRustPlusInstance.promoteToLeaderAsync(player.steamId);
 					}
 
 					const str = client.intlGet(interaction.guildId, 'leaderTransferred', {
@@ -119,8 +119,18 @@ module.exports = {
 
 					// Проверяем, привязан ли SteamID игрока к серверу
           if (!Object.keys(instance.serverListLite[rustplus.serverId]).includes(player.steamId)) {
-        	const reminder = client.intlGet(interaction.guildId, 'leaderReminder');
-	        str += '\n' + reminder;
+						let names = '';
+		     	for (const player of rustplus.team.players) {
+		    		if (Object.keys(instance.serverListLite[rustplus.serverId]).includes(player.steamId)) {
+			   		names += `${player.name}, `
+			    	}
+		    	}
+		     	names = names.slice(0, -2);
+
+        	const reminder = client.intlGet(interaction.guildId, 'leaderReminder', {
+						name: names
+					});
+					rustplus.log(client.intlGet(interaction.guildId, 'infoCap'), reminder);
           }
 
 					await client.interactionEditReply(interaction, DiscordEmbeds.getActionInfoEmbed(0, str,
@@ -133,7 +143,7 @@ module.exports = {
 
 		const str = client.intlGet(interaction.guildId, 'couldNotIdentifyMember', { name: member });
 		await client.interactionEditReply(interaction, DiscordEmbeds.getActionInfoEmbed(1, str,
-			instance.serverList[rustplus.serverId].title));
+			       instance.serverList[rustplus.serverId].title));
 		rustplus.log(client.intlGet(interaction.guildId, 'warningCap'), str);
 	},
 };

@@ -475,7 +475,7 @@
     "leaderCommandIsDisabled": "Leader command is disabled in settings.",
     "leaderCommandOnlyWorks": "Leader command only works if the current leader is {name}.",
     "leaderTransferred": "Team leadership was transferred to {name}.",
-    "leaderReminder": "Don't forget to return leadership to players linked with Rust++: {names}",
+    "leaderReminder": "Don't forget to return leadership to players linked with Rust++: {name}",
     "leavingMapAt": "Leaving at {location}.",
     "lessThanSign": "Less-than Sign",
     "lighthouse": "Lighthouse",

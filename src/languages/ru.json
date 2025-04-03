@@ -475,7 +475,7 @@
     "leaderCommandIsDisabled": "Команда лидера отключена в настройках.",
     "leaderCommandOnlyWorks": "Команда лидера работает только в том случае, если нынешний лидер {name}.",
     "leaderTransferred": "Руководство команды было передано {name}.",
-    "leaderReminder": "Не забудьте вернуть лидерство игрокам, связанным с Rust++: {names}",
+    "leaderReminder": "Не забудьте вернуть лидерство игрокам, связанным с Rust++: {name}",
     "leavingMapAt": "Выход в {location}.",
     "lessThanSign": "Знак меньше",
     "lighthouse": "Маяк",
