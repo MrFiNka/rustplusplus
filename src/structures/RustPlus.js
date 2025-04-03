@@ -2795,6 +2795,10 @@ class RustPlus extends RustPlusLib {
     
     
     async addPlayerToTracker(trackerId, id) {
+         // Добавляем извлечение SteamID из URL
+         const steamUrlMatch = id.match(/steamcommunity\.com\/profiles\/(\d+)/);
+         if (steamUrlMatch) id = steamUrlMatch[1];
+
         const instance = Client.client.getInstance(this.guildId);
         if (!instance) {
             return;
@@ -2893,6 +2897,10 @@ class RustPlus extends RustPlusLib {
     }    
 
     async removePlayerFromTracker(trackerId, id) {
+        // Добавляем извлечение SteamID из URL
+         const steamUrlMatch = id.match(/steamcommunity\.com\/profiles\/(\d+)/);
+        if (steamUrlMatch) id = steamUrlMatch[1];
+        
         const instance = Client.client.getInstance(this.guildId);
         if (!instance) {
             return;

@@ -350,8 +350,12 @@ module.exports = async (client, interaction) => {
     else if (interaction.customId.startsWith('TrackerAddPlayer')) {
         const ids = JSON.parse(interaction.customId.replace('TrackerAddPlayer', ''));
         const tracker = instance.trackers[ids.trackerId];
-        const id = interaction.fields.getTextInputValue('TrackerAddPlayerId');
-
+        let id = interaction.fields.getTextInputValue('TrackerAddPlayerId');
+    
+        // Извлекаем SteamID из URL
+        const steamUrlMatch = id.match(/https?:\/\/steamcommunity\.com\/profiles\/(\d+)/);
+        if (steamUrlMatch) id = steamUrlMatch[1];
+    
         if (!/^[0-9]+$/.test(id)) {
             interaction.deferUpdate();
             return;
@@ -412,10 +416,12 @@ module.exports = async (client, interaction) => {
     else if (interaction.customId.startsWith('TrackerRemovePlayer')) {
         const ids = JSON.parse(interaction.customId.replace('TrackerRemovePlayer', ''));
         const tracker = instance.trackers[ids.trackerId];
-        const id = interaction.fields.getTextInputValue('TrackerRemovePlayerId');
-
-        const isSteamId64 = id.length === Constants.STEAMID64_LENGTH ? true : false;
-
+        let id = interaction.fields.getTextInputValue('TrackerRemovePlayerId');
+    
+        // Извлекаем SteamID из URL
+        const steamUrlMatch = id.match(/https?:\/\/steamcommunity\.com\/profiles\/(\d+)/);
+        if (steamUrlMatch) id = steamUrlMatch[1];
+    
         if (!/^[0-9]+$/.test(id)) {
             interaction.deferUpdate();
             return;
