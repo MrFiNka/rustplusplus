@@ -110,7 +110,7 @@ module.exports = {
 						await rustplus.team.changeLeadership(player.steamId);
 					}
 					else {
-						rustplus.leaderRustPlusInstance.promoteToLeaderAsync(player.steamId);
+						await rustplus.leaderRustPlusInstance.promoteToLeaderAsync(player.steamId);
 					}
 
 					const str = client.intlGet(interaction.guildId, 'leaderTransferred', {
