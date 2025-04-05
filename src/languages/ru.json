@@ -756,7 +756,7 @@
     "timeSinceLast": "Прошло {time} с последней активности.",
     "timeSinceLastEvent": "Прошло {time} с последней активности.",
     "timeSinceLastSinceDestroyedLong": "Был {time1} назад. Упал на {location}, {time2} назад.",
-    "timeSinceLastSinceDestroyedShort": "Был {time1} назад. \nСбит на {location}, {time2} назад.",
+    "timeSinceLastSinceDestroyedShort": "Сбит на {location}, {time2} назад.",
     "timeSincePatrolHelicopterWasOnMap": "Патрульный вертолёт был {time} назад.",
     "timeSinceTravelingVendorWasOnMap": "{time} с тех пор, как Странствующий Торговец появился на карте.",
     "timeSinceWipe": "С последнего вайпа прошло {time}.",

@@ -1382,7 +1382,9 @@ class RustPlus extends RustPlusLib {
                 });
             }
             else {
+                const timeSinceOnMap = Timer.secondsToFullScale((new Date() - wasOnMap) / 1000, 's');
                 strings.push(Client.client.intlGet(this.guildId, 'patrolHelicopterLocatedAt', {
+                    time1: timeSinceOnMap,
                     location: patrolHelicopter.location.string
                 }));
             }

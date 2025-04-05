@@ -274,9 +274,20 @@ async function pairingServer(client, guild, title, message, body) {
         steamId: body.playerId,
         playerToken: body.playerToken,
     };
-    client.setInstance(guild.id, instance);
 
     await DiscordMessages.sendServerMessage(guild.id, serverId, null);
+    // Автоматически активируем сервер
+    instance.activeServer = serverId;
+    client.setInstance(guild.id, instance);
+
+    // Отправляем сообщение с state=1 (активно)
+    await DiscordMessages.sendServerMessage(guild.id, serverId, 1); 
+      setTimeout(async () => {
+                    const rustplus = client.rustplusInstances[guild.id];
+                    if (rustplus && rustplus.isConnected) {
+                        await rustplus.sendInGameMessage(client.intlGet(guild.id, 'connectedToServer'));
+                    }
+      }, 3000);
 }
 
 async function pairingEntitySwitch(client, guild, title, message, body) {
