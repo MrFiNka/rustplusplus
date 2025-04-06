@@ -292,6 +292,7 @@
     "connected": "Connected",
     "connectedCap": "CONNECTED",
     "connectedToServer": "CONNECTED TO SERVER.",
+    
     "connectingCap": "CONNECTING",
     "connectingToServer": "CONNECTING TO SERVER...",
     "connectionEvents": "Connection Events",

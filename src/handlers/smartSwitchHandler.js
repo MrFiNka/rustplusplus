@@ -431,30 +431,30 @@ module.exports = {
         }
         else if (command.startsWith(`${entityCommand}`)) {
             active = !switches[entityId].active;
-        }
-        else {
-            return true;
-        }
-
-        if (rustplus.currentSwitchTimeouts.hasOwnProperty(entityId)) {
-            clearTimeout(rustplus.currentSwitchTimeouts[entityId]);
-            delete rustplus.currentSwitchTimeouts[entityId];
-        }
-
-        const timeSeconds = Timer.getSecondsFromStringTime(rest);
-
-        rustplus.log(client.intlGet(null, 'infoCap'), client.intlGet(null, `logSmartSwitchValueChange`, {
-            value: active
-        }));
-
-        module.exports.smartSwitchCommandTurnOnOff(rustplus, client, entityId, active);
-
-        if (!switches[entityId].reachable) return true;
-
-        let str = client.intlGet(guildId, 'deviceWasTurnedOnOff', {
-            device: switches[entityId].name,
-            status: active ? onCap : offCap
-        });
+        
+            // 1. Сбрасываем таймер текущего переключателя (добавить)
+            if (rustplus.currentSwitchTimeouts.hasOwnProperty(entityId)) {
+                clearTimeout(rustplus.currentSwitchTimeouts[entityId]);
+                delete rustplus.currentSwitchTimeouts[entityId];
+            }
+        
+            module.exports.smartSwitchCommandTurnOnOff(rustplus, client, entityId, active);
+        
+            // 2. Обновляем группу (добавить)
+            SmartSwitchGroupHandler.updateSwitchGroupIfContainSwitch(client, guildId, serverId, entityId);
+        
+            // 3. Сбрасываем таймер группы (добавить)
+            const groupId = SmartSwitchGroupHandler.getGroupIdBySwitchId(instance, serverId, entityId);
+            if (groupId && rustplus.currentSwitchGroupTimeouts.hasOwnProperty(groupId)) {
+                clearTimeout(rustplus.currentSwitchGroupTimeouts[groupId]);
+                delete rustplus.currentSwitchGroupTimeouts[groupId];
+            }
+        
+            // 4. Отправляем сообщение (уже есть в вашем коде)
+            let str = client.intlGet(guildId, 'deviceWasTurnedOnOff', {
+                device: switches[entityId].name,
+                status: active ? onCap : offCap
+            });
 
         if (timeSeconds === null) {
             rustplus.sendInGameMessage(str);
@@ -483,6 +483,7 @@ module.exports = {
 
         rustplus.sendInGameMessage(str);
         return true;
+    }
     },
 
     smartSwitchCommandTurnOnOff: async function (rustplus, client, entityId, active) {

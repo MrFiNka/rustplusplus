@@ -290,6 +290,7 @@
     "connected": "Подключено",
     "connectedCap": "ПОДКЛЮЧЕНО",
     "connectedToServer": "ПОДКЛЮЧЕН К СЕРВЕРУ.",
+    "playerPairedSuccessfully": "Player {player} successfully paired Rust++ with {server}!",
     "connectingCap": "ПОДКЛЮЧЕНИЕ",
     "connectingToServer": "ПОДКЛЮЧЕНИЕ К СЕРВЕРУ...",
     "connectionEvents": "События подключения",

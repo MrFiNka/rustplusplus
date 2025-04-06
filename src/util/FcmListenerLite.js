@@ -183,6 +183,22 @@ async function pairingServer(client, guild, steamId, title, message, body) {
     if (rustplus && (rustplus.serverId === serverId) && rustplus.team.leaderSteamId === steamId) {
         rustplus.updateLeaderRustPlusLiteInstance();
     }
+
+      // Добавляем отправку сообщения после успешного спаривания
+      if (rustplus && rustplus.isConnected) {
+        // Получаем ник игрока из данных команды
+        const player = rustplus.team.players.find(p => p.steamId === steamId);
+        const playerName = player?.name || 'unknownPlayer'
+
+        // Формируем сообщение с локализацией
+        const message = Client.client.intlGet(guild.id, 'playerPairedSuccessfully', {
+            player: playerName,
+            server: instance.serverList[serverId]?.title || serverId
+        });
+
+        // Отправляем сообщение в игровой чат
+        await rustplus.sendTeamMessage(message);
+    }
 }
 
 async function pairingEntitySwitch(client, guild, title, message, body) {
