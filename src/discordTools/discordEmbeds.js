@@ -742,7 +742,7 @@ module.exports = {
 
         if (battlemetricsId && instance.generalSettings.displayInformationBattlemetricsUpcomingWipes){
             const bmInstance = Client.client.battlemetricsInstances[battlemetricsId];
-            const upcomingWipes = "Receiving Error" || bmInstance.getUpcomingWipesOrderedByTime();
+            const upcomingWipes = bmInstance.getUpcomingWipesOrderedByTime();
 
             if (upcomingWipes.length > 0){
                 const closestWipe = upcomingWipes[0];
@@ -860,7 +860,20 @@ module.exports = {
     const instance = Client.client.getInstance(guildId);
 
     const title = Client.client.intlGet(guildId, 'teamMemberInfo');
-    const teamMemberFieldName = Client.client.intlGet(guildId, 'teamMember');
+
+    let string = '';
+            let counter = 0;
+            for (const player of this.team.players) {
+                if (player.isOnline) {
+                    string += `${player.name}, `;
+                    counter += 1;
+                }
+            }
+            const amount = `(${counter}/${this.team.players.length}) `;
+    
+    const teamMemberFieldNamestring = `${Client.client.intlGet(this.guildId, 'teamMember')} | ${amount}`;
+    //const teamMemberFieldName = Client.client.intlGet(guildId, 'teamMember');
+
     const statusFieldName = Client.client.intlGet(guildId, 'status');
     const locationFieldName = Client.client.intlGet(guildId, 'location');
     const footer = instance.serverList[rustplus.serverId].title;
