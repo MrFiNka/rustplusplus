@@ -191,7 +191,7 @@ async function pairingServer(client, guild, steamId, title, message, body) {
         const playerName = player?.name || 'unknownPlayer'
 
         // Формируем сообщение с локализацией
-        const message = Client.client.intlGet(guild.id, 'playerPairedSuccessfully', {
+        const message = client.intlGet(guild.id, 'playerPairedSuccessfully', {
             player: playerName,
             server: instance.serverList[serverId]?.title || serverId
         });
